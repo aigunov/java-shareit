@@ -42,9 +42,10 @@ public class ItemDAOImpl implements ItemDAO {
      */
     @Override
     public void deleteItem(long itemId) {
-        items.remove(itemId);
+        Item itemToDelete = getItemById(itemId).get();
+        items.remove(itemToDelete);
     }
-
+    
     /**
      * Метод извлекает по item из хранилища
      *
