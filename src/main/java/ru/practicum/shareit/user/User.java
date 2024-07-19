@@ -1,7 +1,20 @@
 package ru.practicum.shareit.user;
 
+import jakarta.validation.constraints.NotEmpty;
+import lombok.Builder;
+import lombok.Data;
+
 /**
- * TODO Sprint add-controllers.
+ * @author Mr.White
+ * POJO класс User
  */
+@Data
+@Builder
 public class User {
+    private long id;
+    @NotEmpty
+    private String name;
+    @NotEmpty
+    private String email;
 }
+
