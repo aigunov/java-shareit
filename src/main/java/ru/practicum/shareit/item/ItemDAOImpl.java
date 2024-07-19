@@ -45,7 +45,7 @@ public class ItemDAOImpl implements ItemDAO {
         Item itemToDelete = getItemById(itemId).get();
         items.remove(itemToDelete);
     }
-    
+
     /**
      * Метод извлекает по item из хранилища
      *
