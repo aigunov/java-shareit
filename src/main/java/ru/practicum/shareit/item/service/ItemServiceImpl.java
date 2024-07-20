@@ -1,22 +1,22 @@
-package ru.practicum.shareit.item;
+package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.BadUserIdToUpdate;
-import ru.practicum.shareit.exception.NoSuchItemException;
-import ru.practicum.shareit.exception.NoSuchUserException;
-import ru.practicum.shareit.item.dto.ItemDtoToCreate;
-import ru.practicum.shareit.item.dto.ItemDtoToUpdate;
+import ru.practicum.shareit.item.dao.ItemDAO;
+import ru.practicum.shareit.item.dto.ItemDtoCreate;
+import ru.practicum.shareit.item.dto.ItemDtoResponse;
+import ru.practicum.shareit.item.dto.ItemDtoUpdate;
+import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.User;
-import ru.practicum.shareit.user.UserDAO;
-import ru.practicum.shareit.utils.Mapper;
+import ru.practicum.shareit.user.dao.UserDAO;
+import ru.practicum.shareit.user.model.User;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * @author Mr.White
@@ -37,12 +37,12 @@ public final class ItemServiceImpl implements ItemService {
      * @return Item сохраненный в базе данных
      */
     @Override
-    public Item createItem(final ItemDtoToCreate itemDto, final long userId) {
-        User owner = userDAO.getUser(userId).orElseThrow(() -> new NoSuchUserException("Такого пользователя не существует"));
-        Item item = Mapper.toItem(itemDto);
-        itemDAO.createItem(item, owner);
+    public ItemDtoResponse createItem(final ItemDtoCreate itemDto, final long userId) {
+        User owner = userDAO.getUser(userId).orElseThrow(() -> new NoSuchElementException("Такого пользователя не существует"));
+        Item item = ItemMapper.toItem(itemDto);
+        ItemDtoResponse itemResponse = ItemMapper.toItemDto(itemDAO.createItem(item, owner));
         log.info("Item created: {}", item);
-        return item;
+        return itemResponse;
     }
 
     /**
@@ -55,14 +55,14 @@ public final class ItemServiceImpl implements ItemService {
      * @return item обновленный в базе
      */
     @Override
-    public Item updateItem(final ItemDtoToUpdate itemDto, final long itemId, final long userId) {
-        userDAO.getUser(userId).orElseThrow(() -> new NoSuchUserException("Такого пользователя не существует"));
+    public ItemDtoResponse updateItem(final ItemDtoUpdate itemDto, final long itemId, final long userId) {
+        userDAO.getUser(userId).orElseThrow(() -> new NoSuchElementException("Такого пользователя не существует"));
         Item item = itemDAO.getItemById(itemId)
-                .orElseThrow(() -> new NoSuchItemException("Такого предмета не существует"));
+                .orElseThrow(() -> new NoSuchElementException("Такого предмета не существует"));
         if (item.getOwner().getId() != userId) throw new BadUserIdToUpdate("Предмет не принадлежит этому пользователю");
         item = itemDAO.updateItem(itemDto, itemId);
         log.info("Item updated: {}", item);
-        return item;
+        return ItemMapper.toItemDto(item);
     }
 
     /**
@@ -72,9 +72,9 @@ public final class ItemServiceImpl implements ItemService {
      * @return извлеченный item
      */
     @Override
-    public Item getItemById(final long itemId) {
-        Item item = itemDAO.getItemById(itemId)
-                .orElseThrow(() -> new NoSuchItemException("Такого пользователя не существует"));
+    public ItemDtoResponse getItemById(final long itemId) {
+        ItemDtoResponse item = ItemMapper.toItemDto(itemDAO.getItemById(itemId)
+                .orElseThrow(() -> new NoSuchElementException("Такого пользователя не существует")));
         log.info("Item received: {}", item);
         return item;
     }
@@ -86,10 +86,12 @@ public final class ItemServiceImpl implements ItemService {
      * @return список item пользователя
      */
     @Override
-    public List<Item> getUserItems(final long userId) {
-        List<Item> items = itemDAO.getItems().stream()
+    public List<ItemDtoResponse> getUserItems(final long userId) {
+        List<ItemDtoResponse> items = itemDAO.getItems().stream()
                 .filter(item -> item.getOwner().getId() == userId)
-                .sorted(Comparator.comparing(Item::getName)).toList();
+                .sorted(Comparator.comparing(Item::getName))
+                .map(ItemMapper::toItemDto)
+                .toList();
         log.info("Items of User: {}", items);
         return items;
     }
@@ -101,13 +103,14 @@ public final class ItemServiceImpl implements ItemService {
      * @return список всех подходящих item
      */
     @Override
-    public List<Item> search(final String text) {
+    public List<ItemDtoResponse> search(final String text) {
         String regex = ".*" + Pattern.quote(text.toLowerCase()) + ".*";
-        List<Item> items = itemDAO.getItems().stream()
+        List<ItemDtoResponse> items = itemDAO.getItems().stream()
                 .filter(item -> (Pattern.compile(regex).matcher(item.getName().toLowerCase()).matches()
                         || Pattern.compile(regex).matcher(item.getDescription().toLowerCase()).matches())
                         && item.getAvailable())
-                .collect(Collectors.toList());
+                .map(ItemMapper::toItemDto)
+                .toList();
         log.info("Found {} items: ", items.size(), items);
         return !text.isEmpty() ? items : List.of();
     }

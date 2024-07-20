@@ -1,11 +1,12 @@
-package ru.practicum.shareit.user;
+package ru.practicum.shareit.user.dao;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import ru.practicum.shareit.user.dto.UserDtoToUpdate;
+import ru.practicum.shareit.exception.DataAlreadyExistException;
+import ru.practicum.shareit.user.dto.UserDtoUpdate;
+import ru.practicum.shareit.user.model.User;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author Mr.White
@@ -14,15 +15,17 @@ import java.util.Optional;
 @Repository
 @RequiredArgsConstructor
 public class UserDAOImpl implements UserDAO {
-    private final List<User> users;
-    private Long counter = 1L;
+    private final HashMap<Long, User> users = new HashMap<>();
+    private final Set<String> emailUniqSet = new HashSet();
+    private Long counter = 0L;
 
     /**
      * @return список всех пользователей
      */
     @Override
     public List<User> getAllUsers() {
-        return users;
+        List<User> usersList = new ArrayList<>(users.values());
+        return usersList;
     }
 
     /**
@@ -31,8 +34,12 @@ public class UserDAOImpl implements UserDAO {
      */
     @Override
     public User saveUser(final User user) {
-        user.setId(counter++);
-        users.add(user);
+        if (emailUniqSet.contains(user.getEmail())) {
+            throw new DataAlreadyExistException("Email: " + user.getEmail() + " already exists");
+        }
+        emailUniqSet.add(user.getEmail());
+        user.setId(++counter);
+        users.put(counter, user);
         return user;
     }
 
@@ -43,7 +50,8 @@ public class UserDAOImpl implements UserDAO {
      */
     @Override
     public void deleteUser(final long userId) {
-        users.removeIf(user -> user.getId() == userId);
+        emailUniqSet.remove(users.get(userId).getEmail());
+        users.remove(userId);
     }
 
     /**
@@ -52,7 +60,7 @@ public class UserDAOImpl implements UserDAO {
      */
     @Override
     public Optional<User> getUser(final long id) {
-        return users.stream().filter(user -> user.getId() == id).findFirst();
+        return Optional.ofNullable(users.get(id));
     }
 
     /**
@@ -63,10 +71,21 @@ public class UserDAOImpl implements UserDAO {
      * @return обновленного пользователя
      */
     @Override
-    public User updateUser(final UserDtoToUpdate userDto, final long userId) {
+    public User updateUser(final UserDtoUpdate userDto, final long userId) {
         User user = getUser(userId).get();
+        if (emailUniqSet.contains(userDto.getEmail()) && checkEmailIsBusyOtherUsers(userDto.getEmail(), userId)) {
+            throw new DataAlreadyExistException("Email: " + user.getEmail() + " already exists");
+        }
+        emailUniqSet.remove(user.getEmail());
         user.setName(userDto.getName() != null ? userDto.getName() : user.getName());
         user.setEmail(userDto.getEmail() != null ? userDto.getEmail() : user.getEmail());
+        emailUniqSet.add(user.getEmail());
         return user;
+    }
+
+    private boolean checkEmailIsBusyOtherUsers(String email, long userId) {
+        return users.values().stream()
+                .filter(user -> user.getId() != userId)
+                .anyMatch(user -> user.getEmail().equals(email));
     }
 }

@@ -1,8 +1,8 @@
-package ru.practicum.shareit.item;
+package ru.practicum.shareit.item.dao;
 
-import ru.practicum.shareit.item.dto.ItemDtoToUpdate;
+import ru.practicum.shareit.item.dto.ItemDtoUpdate;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.User;
+import ru.practicum.shareit.user.model.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,5 +20,5 @@ public interface ItemDAO {
 
     List<Item> getItems();
 
-    Item updateItem(ItemDtoToUpdate itemDto, long itemId);
+    Item updateItem(ItemDtoUpdate itemDto, long itemId);
 }

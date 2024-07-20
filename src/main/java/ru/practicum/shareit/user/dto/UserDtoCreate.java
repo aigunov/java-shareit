@@ -14,7 +14,7 @@ import lombok.Data;
  */
 @Builder
 @Data
-public class UserDtoToCreate {
+public class UserDtoCreate {
     private String name;
     @NotEmpty
     @Email

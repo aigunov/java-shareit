@@ -12,7 +12,7 @@ import lombok.Data;
  */
 @Data
 @Builder
-public class UserDtoToUpdate {
+public class UserDtoUpdate {
     private String name;
     private String email;
 }

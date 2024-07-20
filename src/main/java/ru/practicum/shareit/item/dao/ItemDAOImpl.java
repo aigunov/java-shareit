@@ -1,11 +1,13 @@
-package ru.practicum.shareit.item;
+package ru.practicum.shareit.item.dao;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import ru.practicum.shareit.item.dto.ItemDtoToUpdate;
+import ru.practicum.shareit.item.dto.ItemDtoUpdate;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.User;
+import ru.practicum.shareit.user.model.User;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,8 +18,8 @@ import java.util.Optional;
 @Repository
 @RequiredArgsConstructor
 public class ItemDAOImpl implements ItemDAO {
-    private final List<Item> items;
-    private Long counter = 1L;
+    private final HashMap<Long, Item> items = new HashMap<>();
+    private Long counter = 0L;
 
     /**
      * Метод сохраняет item
@@ -28,10 +30,9 @@ public class ItemDAOImpl implements ItemDAO {
      */
     @Override
     public Item createItem(Item item, User owner) {
-        item.setId(counter);
+        item.setId(++counter);
         item.setOwner(owner);
-        counter++;
-        items.add(item);
+        items.put(counter, item);
         return item;
     }
 
@@ -42,8 +43,7 @@ public class ItemDAOImpl implements ItemDAO {
      */
     @Override
     public void deleteItem(long itemId) {
-        Item itemToDelete = getItemById(itemId).get();
-        items.remove(itemToDelete);
+        items.remove(itemId);
     }
 
     /**
@@ -53,7 +53,7 @@ public class ItemDAOImpl implements ItemDAO {
      */
     @Override
     public Optional<Item> getItemById(long id) {
-        return items.stream().filter(item -> item.getId() == id).findFirst();
+        return Optional.ofNullable(items.get(id));
     }
 
     /**
@@ -61,7 +61,8 @@ public class ItemDAOImpl implements ItemDAO {
      */
     @Override
     public List<Item> getItems() {
-        return items;
+        List<Item> itemsList = new ArrayList<>(items.values());
+        return itemsList;
     }
 
     /**
@@ -72,15 +73,12 @@ public class ItemDAOImpl implements ItemDAO {
      * @return обновленный item
      */
     @Override
-    public Item updateItem(ItemDtoToUpdate itemDto, long itemId) {
+    public Item updateItem(ItemDtoUpdate itemDto, long itemId) {
         Item item = getItemById(itemId).get();
-        items.remove(item);
         item.setName(itemDto.getName() != null && !itemDto.getName().isEmpty() ? itemDto.getName() : item.getName());
         item.setDescription(itemDto.getDescription() != null && !itemDto.getDescription().isEmpty() ?
                 itemDto.getDescription() : item.getDescription());
-        item.setRequest(itemDto.getRequest());
         item.setAvailable(itemDto.getAvailable() != null ? itemDto.getAvailable() : item.getAvailable());
-        items.add(item);
         return item;
 
     }

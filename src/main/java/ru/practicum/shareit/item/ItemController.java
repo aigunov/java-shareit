@@ -5,9 +5,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.item.dto.ItemDtoToCreate;
-import ru.practicum.shareit.item.dto.ItemDtoToUpdate;
-import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.dto.ItemDtoCreate;
+import ru.practicum.shareit.item.dto.ItemDtoResponse;
+import ru.practicum.shareit.item.dto.ItemDtoUpdate;
+import ru.practicum.shareit.item.service.ItemService;
 
 import java.util.List;
 
@@ -23,42 +24,47 @@ public final class ItemController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Item addItem(@RequestHeader(value = "X-Sharer-User-Id") final long userId,
-                        @Valid @RequestBody final ItemDtoToCreate itemDto) {
-        Item item = itemService.createItem(itemDto, userId);
+    public ItemDtoResponse addItem(@RequestHeader(value = "X-Sharer-User-Id") final long userId,
+                                   @Valid @RequestBody final ItemDtoCreate itemDto) {
+        log.info("Request body: {}", itemDto);
+        ItemDtoResponse item = itemService.createItem(itemDto, userId);
         log.info("Item created: {}", itemDto);
         return item;
     }
 
     @PatchMapping("/{itemId}")
     @ResponseStatus(HttpStatus.OK)
-    public Item updateItem(@RequestHeader(value = "X-Sharer-User-Id") final long userId,
-                           @Valid @RequestBody final ItemDtoToUpdate itemDto, @PathVariable final long itemId) {
-        Item item = itemService.updateItem(itemDto, itemId, userId);
+    public ItemDtoResponse updateItem(@RequestHeader(value = "X-Sharer-User-Id") final long userId,
+                                      @Valid @RequestBody final ItemDtoUpdate itemDto, @PathVariable final long itemId) {
+        log.info("Update Item Request Body: {}", itemDto);
+        ItemDtoResponse item = itemService.updateItem(itemDto, itemId, userId);
         log.info("Item updated: {}", itemDto);
         return item;
     }
 
     @GetMapping("/{itemId}")
     @ResponseStatus(HttpStatus.OK)
-    public Item getItem(@PathVariable final long itemId) {
-        Item item = itemService.getItemById(itemId);
+    public ItemDtoResponse getItem(@PathVariable final long itemId) {
+        log.info("Get Item Request Body: {}", itemId);
+        ItemDtoResponse item = itemService.getItemById(itemId);
         log.info("Item: {}", item);
         return item;
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<Item> getItemsOfUser(@RequestHeader(value = "X-Sharer-User-Id") final long userId) {
-        List<Item> items = itemService.getUserItems(userId);
+    public List<ItemDtoResponse> getItemsOfUser(@RequestHeader(value = "X-Sharer-User-Id") final long userId) {
+        log.info("Get Items Of User Request Body: {}", userId);
+        List<ItemDtoResponse> items = itemService.getUserItems(userId);
         log.info("User's items: {}", items);
         return items;
     }
 
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
-    public List<Item> searchItems(@RequestParam final String text) {
-        List<Item> foundItems = itemService.search(text);
+    public List<ItemDtoResponse> searchItems(@RequestParam final String text) {
+        log.info("Search Item Request Text: {}", text);
+        List<ItemDtoResponse> foundItems = itemService.search(text);
         log.info("Found items: {}", foundItems);
         return foundItems;
     }

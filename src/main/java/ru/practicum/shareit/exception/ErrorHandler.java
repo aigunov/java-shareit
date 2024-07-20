@@ -8,13 +8,15 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.NoSuchElementException;
+
 @Slf4j
 @RestControllerAdvice("ru.practicum.shareit")
 public final class ErrorHandler {
 
-    @ExceptionHandler(NoSuchUserException.class)
+    @ExceptionHandler(NoSuchElementException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleNoSuchUserException(final NoSuchUserException e) {
+    public ErrorResponse handleNoSuchUserException(final NoSuchElementException e) {
         log.error(e.getMessage());
         return new ErrorResponse(e.getMessage());
     }
@@ -26,13 +28,6 @@ public final class ErrorHandler {
         return new ErrorResponse(e.getMessage());
     }
 
-    @ExceptionHandler(NoSuchItemException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleNoSuchItemException(final NoSuchItemException e) {
-        log.error(e.getMessage());
-        return new ErrorResponse(e.getMessage());
-    }
-
     @ExceptionHandler({ValidationException.class, MethodArgumentNotValidException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleValidationException(final ValidationException e) {
@@ -40,9 +35,9 @@ public final class ErrorHandler {
         return new ErrorResponse(e.getMessage());
     }
 
-    @ExceptionHandler(UserWithSuchEmailAlreadyExist.class)
+    @ExceptionHandler(DataAlreadyExistException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleUserWithSuchEmailAlreadyExist(final UserWithSuchEmailAlreadyExist e) {
+    public ErrorResponse handleUserWithSuchEmailAlreadyExist(final DataAlreadyExistException e) {
         log.error(e.getMessage());
         return new ErrorResponse(e.getMessage());
     }
