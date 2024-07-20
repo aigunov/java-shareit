@@ -1,6 +1,5 @@
 package ru.practicum.shareit.user.dao;
 
-import ru.practicum.shareit.user.dto.UserDtoUpdate;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.List;
@@ -19,5 +18,5 @@ public interface UserDAO {
 
     Optional<User> getUser(long id);
 
-    User updateUser(UserDtoUpdate userDto, long userId);
+    User updateUser(User user);
 }

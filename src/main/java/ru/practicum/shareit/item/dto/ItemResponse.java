@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Builder
 @Data
-public class ItemDtoResponse {
+public class ItemResponse {
     private long id;
     @NotEmpty
     private String name;

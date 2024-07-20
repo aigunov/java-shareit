@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.user.dao.UserDAO;
-import ru.practicum.shareit.user.dto.UserDtoCreate;
-import ru.practicum.shareit.user.dto.UserDtoResponse;
-import ru.practicum.shareit.user.dto.UserDtoUpdate;
+import ru.practicum.shareit.user.dto.UserCreate;
+import ru.practicum.shareit.user.dto.UserResponse;
+import ru.practicum.shareit.user.dto.UserUpdate;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
 
@@ -26,14 +26,14 @@ public class UserServiceImpl implements UserService {
     /**
      * Метод добавляет пользователя
      *
-     * @param userDtoCreate - тело запроса
+     * @param userCreate - тело запроса
      * @return добавленного пользователя
      */
     @Override
-    public UserDtoResponse addUser(final UserDtoCreate userDtoCreate) {
-        User user = userDAO.saveUser(UserMapper.toUser(userDtoCreate));
-        log.info("User {} added", userDtoCreate.getEmail());
-        return UserMapper.toUserDto(user);
+    public UserResponse addUser(final UserCreate userCreate) {
+        User user = userDAO.saveUser(UserMapper.toUser(userCreate));
+        log.info("User {} added", userCreate.getEmail());
+        return UserMapper.toUserResponse(user);
     }
 
     /**
@@ -42,8 +42,8 @@ public class UserServiceImpl implements UserService {
      * если запрашиваемого пользователя нет выбрасывает исключение
      */
     @Override
-    public UserDtoResponse getUser(final Long userId) {
-        UserDtoResponse user = UserMapper.toUserDto(userDAO.getUser(userId)
+    public UserResponse getUser(final Long userId) {
+        UserResponse user = UserMapper.toUserResponse(userDAO.getUser(userId)
                 .orElseThrow(() -> new NoSuchElementException("Данный пользователь не найден")));
         log.info("User {} found", user);
         return user;
@@ -53,8 +53,8 @@ public class UserServiceImpl implements UserService {
      * @return список всех пользователей
      */
     @Override
-    public List<UserDtoResponse> getAllUsers() {
-        List<UserDtoResponse> users = userDAO.getAllUsers().stream().map(UserMapper::toUserDto).toList();
+    public List<UserResponse> getAllUsers() {
+        List<UserResponse> users = userDAO.getAllUsers().stream().map(UserMapper::toUserResponse).toList();
         log.info("Users {}", users);
         return users;
     }
@@ -75,15 +75,22 @@ public class UserServiceImpl implements UserService {
      * проверяет что обновляемый пользователь существует
      * в противно случае выбрасывает соответсвуеющее исключение
      *
-     * @param userDtoUpdate - тело запроса содержащее поля для обновления
-     * @param userId        - ID пользователя которого надо обновить
+     * @param userUpdate - тело запроса содержащее поля для обновления
+     * @param userId     - ID пользователя которого надо обновить
      * @return обновленного пользователя
      */
     @Override
-    public UserDtoResponse updateUser(final UserDtoUpdate userDtoUpdate, final Long userId) {
-        userDAO.getUser(userId).orElseThrow(() -> new NoSuchElementException("Данный пользователь не найден"));
+    public UserResponse updateUser(final UserUpdate userUpdate, final Long userId) {
+        User oldUserData = userDAO.getUser(userId)
+                .orElseThrow(() -> new NoSuchElementException("Данный пользователь не найден"));
 
-        UserDtoResponse user = UserMapper.toUserDto(userDAO.updateUser(userDtoUpdate, userId));
+
+        User newUserData = UserMapper.toUser(userUpdate, userId);
+        newUserData.setEmail(userUpdate.getEmail() != null ? userUpdate.getEmail() : oldUserData.getEmail());
+        newUserData.setName(userUpdate.getName() != null ? userUpdate.getName() : oldUserData.getName());
+
+
+        UserResponse user = UserMapper.toUserResponse(userDAO.updateUser(newUserData));
         log.info("User {} updated", user);
         return user;
     }

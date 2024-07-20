@@ -1,8 +1,8 @@
 package ru.practicum.shareit.user.service;
 
-import ru.practicum.shareit.user.dto.UserDtoCreate;
-import ru.practicum.shareit.user.dto.UserDtoResponse;
-import ru.practicum.shareit.user.dto.UserDtoUpdate;
+import ru.practicum.shareit.user.dto.UserCreate;
+import ru.practicum.shareit.user.dto.UserResponse;
+import ru.practicum.shareit.user.dto.UserUpdate;
 
 import java.util.List;
 
@@ -11,13 +11,13 @@ import java.util.List;
  * Интерфейс для сервсиной логики для user
  */
 public interface UserService {
-    UserDtoResponse addUser(UserDtoCreate user);
+    UserResponse addUser(UserCreate user);
 
-    UserDtoResponse getUser(Long id);
+    UserResponse getUser(Long id);
 
-    List<UserDtoResponse> getAllUsers();
+    List<UserResponse> getAllUsers();
 
     void deleteUser(Long id);
 
-    UserDtoResponse updateUser(UserDtoUpdate user, Long userId);
+    UserResponse updateUser(UserUpdate user, Long userId);
 }

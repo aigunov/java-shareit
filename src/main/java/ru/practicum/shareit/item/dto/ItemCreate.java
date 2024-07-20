@@ -14,7 +14,7 @@ import lombok.Data;
  */
 @Data
 @Builder
-public class ItemDtoCreate {
+public class ItemCreate {
     @NotEmpty
     private String name;
     @NotEmpty

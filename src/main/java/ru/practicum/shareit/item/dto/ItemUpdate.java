@@ -12,7 +12,7 @@ import lombok.Data;
  */
 @Builder
 @Data
-public class ItemDtoUpdate {
+public class ItemUpdate {
     private String name;
     private String description;
     private Boolean available;

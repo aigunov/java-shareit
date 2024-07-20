@@ -3,7 +3,6 @@ package ru.practicum.shareit.user.dao;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.exception.DataAlreadyExistException;
-import ru.practicum.shareit.user.dto.UserDtoUpdate;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.*;
@@ -66,19 +65,19 @@ public class UserDAOImpl implements UserDAO {
     /**
      * Обновляет в определенного пользователя в хранилище
      *
-     * @param userDto - объект содержащий поля для обновления полей пользователя
-     * @param userId  - ID пользователя которого необходимо обновить
+     * @param userToUpdate - объект содержащий поля для обновления полей пользователя
      * @return обновленного пользователя
      */
     @Override
-    public User updateUser(final UserDtoUpdate userDto, final long userId) {
+    public User updateUser(final User userToUpdate) {
+        long userId = userToUpdate.getId();
         User user = getUser(userId).get();
-        if (emailUniqSet.contains(userDto.getEmail()) && checkEmailIsBusyOtherUsers(userDto.getEmail(), userId)) {
+        if (emailUniqSet.contains(userToUpdate.getEmail()) && checkEmailIsBusyOtherUsers(userToUpdate.getEmail(), userId)) {
             throw new DataAlreadyExistException("Email: " + user.getEmail() + " already exists");
         }
         emailUniqSet.remove(user.getEmail());
-        user.setName(userDto.getName() != null ? userDto.getName() : user.getName());
-        user.setEmail(userDto.getEmail() != null ? userDto.getEmail() : user.getEmail());
+        user.setName(userToUpdate.getName());
+        user.setEmail(userToUpdate.getEmail());
         emailUniqSet.add(user.getEmail());
         return user;
     }

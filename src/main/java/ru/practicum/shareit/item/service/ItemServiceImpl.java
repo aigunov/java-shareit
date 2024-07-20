@@ -5,9 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.BadUserIdToUpdate;
 import ru.practicum.shareit.item.dao.ItemDAO;
-import ru.practicum.shareit.item.dto.ItemDtoCreate;
-import ru.practicum.shareit.item.dto.ItemDtoResponse;
-import ru.practicum.shareit.item.dto.ItemDtoUpdate;
+import ru.practicum.shareit.item.dto.ItemCreate;
+import ru.practicum.shareit.item.dto.ItemResponse;
+import ru.practicum.shareit.item.dto.ItemUpdate;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.dao.UserDAO;
@@ -37,10 +37,10 @@ public final class ItemServiceImpl implements ItemService {
      * @return Item сохраненный в базе данных
      */
     @Override
-    public ItemDtoResponse createItem(final ItemDtoCreate itemDto, final long userId) {
+    public ItemResponse createItem(final ItemCreate itemDto, final long userId) {
         User owner = userDAO.getUser(userId).orElseThrow(() -> new NoSuchElementException("Такого пользователя не существует"));
         Item item = ItemMapper.toItem(itemDto);
-        ItemDtoResponse itemResponse = ItemMapper.toItemDto(itemDAO.createItem(item, owner));
+        ItemResponse itemResponse = ItemMapper.toItemDto(itemDAO.createItem(item, owner));
         log.info("Item created: {}", item);
         return itemResponse;
     }
@@ -55,7 +55,7 @@ public final class ItemServiceImpl implements ItemService {
      * @return item обновленный в базе
      */
     @Override
-    public ItemDtoResponse updateItem(final ItemDtoUpdate itemDto, final long itemId, final long userId) {
+    public ItemResponse updateItem(final ItemUpdate itemDto, final long itemId, final long userId) {
         userDAO.getUser(userId).orElseThrow(() -> new NoSuchElementException("Такого пользователя не существует"));
         Item item = itemDAO.getItemById(itemId)
                 .orElseThrow(() -> new NoSuchElementException("Такого предмета не существует"));
@@ -72,8 +72,8 @@ public final class ItemServiceImpl implements ItemService {
      * @return извлеченный item
      */
     @Override
-    public ItemDtoResponse getItemById(final long itemId) {
-        ItemDtoResponse item = ItemMapper.toItemDto(itemDAO.getItemById(itemId)
+    public ItemResponse getItemById(final long itemId) {
+        ItemResponse item = ItemMapper.toItemDto(itemDAO.getItemById(itemId)
                 .orElseThrow(() -> new NoSuchElementException("Такого пользователя не существует")));
         log.info("Item received: {}", item);
         return item;
@@ -86,8 +86,8 @@ public final class ItemServiceImpl implements ItemService {
      * @return список item пользователя
      */
     @Override
-    public List<ItemDtoResponse> getUserItems(final long userId) {
-        List<ItemDtoResponse> items = itemDAO.getItems().stream()
+    public List<ItemResponse> getUserItems(final long userId) {
+        List<ItemResponse> items = itemDAO.getItems().stream()
                 .filter(item -> item.getOwner().getId() == userId)
                 .sorted(Comparator.comparing(Item::getName))
                 .map(ItemMapper::toItemDto)
@@ -103,9 +103,9 @@ public final class ItemServiceImpl implements ItemService {
      * @return список всех подходящих item
      */
     @Override
-    public List<ItemDtoResponse> search(final String text) {
+    public List<ItemResponse> search(final String text) {
         String regex = ".*" + Pattern.quote(text.toLowerCase()) + ".*";
-        List<ItemDtoResponse> items = itemDAO.getItems().stream()
+        List<ItemResponse> items = itemDAO.getItems().stream()
                 .filter(item -> (Pattern.compile(regex).matcher(item.getName().toLowerCase()).matches()
                         || Pattern.compile(regex).matcher(item.getDescription().toLowerCase()).matches())
                         && item.getAvailable())

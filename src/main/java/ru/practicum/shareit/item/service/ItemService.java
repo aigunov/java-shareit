@@ -1,8 +1,8 @@
 package ru.practicum.shareit.item.service;
 
-import ru.practicum.shareit.item.dto.ItemDtoCreate;
-import ru.practicum.shareit.item.dto.ItemDtoResponse;
-import ru.practicum.shareit.item.dto.ItemDtoUpdate;
+import ru.practicum.shareit.item.dto.ItemCreate;
+import ru.practicum.shareit.item.dto.ItemResponse;
+import ru.practicum.shareit.item.dto.ItemUpdate;
 
 import java.util.List;
 
@@ -11,13 +11,13 @@ import java.util.List;
  * Интерфейс для сервисной логики Item
  */
 public interface ItemService {
-    ItemDtoResponse createItem(ItemDtoCreate itemDto, long userId);
+    ItemResponse createItem(ItemCreate itemDto, long userId);
 
-    ItemDtoResponse updateItem(ItemDtoUpdate itemDto, long itemId, long userId);
+    ItemResponse updateItem(ItemUpdate itemDto, long itemId, long userId);
 
-    ItemDtoResponse getItemById(long id);
+    ItemResponse getItemById(long id);
 
-    List<ItemDtoResponse> getUserItems(long userId);
+    List<ItemResponse> getUserItems(long userId);
 
-    List<ItemDtoResponse> search(String text);
+    List<ItemResponse> search(String text);
 }

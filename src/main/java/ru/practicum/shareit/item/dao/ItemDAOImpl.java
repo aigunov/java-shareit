@@ -2,7 +2,7 @@ package ru.practicum.shareit.item.dao;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import ru.practicum.shareit.item.dto.ItemDtoUpdate;
+import ru.practicum.shareit.item.dto.ItemUpdate;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
@@ -73,7 +73,7 @@ public class ItemDAOImpl implements ItemDAO {
      * @return обновленный item
      */
     @Override
-    public Item updateItem(ItemDtoUpdate itemDto, long itemId) {
+    public Item updateItem(ItemUpdate itemDto, long itemId) {
         Item item = getItemById(itemId).get();
         item.setName(itemDto.getName() != null && !itemDto.getName().isEmpty() ? itemDto.getName() : item.getName());
         item.setDescription(itemDto.getDescription() != null && !itemDto.getDescription().isEmpty() ?

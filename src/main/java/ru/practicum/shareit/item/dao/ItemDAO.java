@@ -1,6 +1,6 @@
 package ru.practicum.shareit.item.dao;
 
-import ru.practicum.shareit.item.dto.ItemDtoUpdate;
+import ru.practicum.shareit.item.dto.ItemUpdate;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
@@ -20,5 +20,5 @@ public interface ItemDAO {
 
     List<Item> getItems();
 
-    Item updateItem(ItemDtoUpdate itemDto, long itemId);
+    Item updateItem(ItemUpdate itemDto, long itemId);
 }
