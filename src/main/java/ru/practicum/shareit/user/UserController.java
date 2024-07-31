@@ -24,7 +24,7 @@ public final class UserController {
     private final UserService userService;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public UserResponse addUser(@Valid @RequestBody final UserCreate userDto) {
         log.info("Create User Request Body: {}", userDto);
         UserResponse user = userService.addUser(userDto);
@@ -35,8 +35,9 @@ public final class UserController {
     @PatchMapping("/{userId}")
     @ResponseStatus(HttpStatus.OK)
     public UserResponse updateUser(@PathVariable final Long userId, @RequestBody final UserUpdate userDto) {
+        userDto.setId(userId);
         log.info("Update User Request Body: {}", userDto);
-        UserResponse user = userService.updateUser(userDto, userId);
+        UserResponse user = userService.updateUser(userDto);
         log.info("User updated: {}", userDto);
         return user;
     }

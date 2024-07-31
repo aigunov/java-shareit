@@ -10,9 +10,11 @@ import lombok.Data;
  * создание нового item требует всех данных
  * необходимо создать разные DTO для item
  */
-@Builder
+@Builder(toBuilder = true)
 @Data
 public class ItemUpdate {
+    private long id;
+    private long ownerId;
     private String name;
     private String description;
     private Boolean available;

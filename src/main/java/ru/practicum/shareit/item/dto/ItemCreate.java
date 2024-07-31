@@ -15,6 +15,8 @@ import lombok.Data;
 @Data
 @Builder
 public class ItemCreate {
+    private long ownerId;
+
     @NotEmpty
     private String name;
     @NotEmpty
