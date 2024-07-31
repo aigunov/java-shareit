@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS items
     description  TEXT         NOT NULL,
     is_available BOOLEAN      NOT NULL,
     owner_id     INTEGER      NOT NULL REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE,
-    request_id   INTEGER      NOT NULL REFERENCES request (id)
+    request_id   INTEGER      REFERENCES request (id)
 );
 
 CREATE TABLE IF NOT EXISTS comment
