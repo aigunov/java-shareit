@@ -23,54 +23,40 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             """, nativeQuery = true)
     List<Booking> findAllBookingByBookerId(@Param("booker_id") final Long bookerId);
 
-    List<Booking> findAllByBookerIdAndBookingStatusOrderByStartDesc(Long bookerId, Status status);
+    List<Booking> findAllByBookerIdAndBookingStatusOrderByStartDesc(final Long bookerId, final Status status);
 
-    List<Booking> findAllByBookerIdAndStartIsLessThanAndEndIsGreaterThanOrderByStartDesc(Long bookerId,
-                                                                                         LocalDateTime start,
-                                                                                         LocalDateTime end);
+    List<Booking> findAllByBookerIdAndStartIsLessThanAndEndIsGreaterThanOrderByStartDesc(final Long bookerId,
+                                                                                         final LocalDateTime start,
+                                                                                         final LocalDateTime end);
 
-    List<Booking> findAllByBookerIdAndEndIsLessThanOrderByStartDesc(Long bookerId, LocalDateTime end);
+    List<Booking> findAllByBookerIdAndEndIsLessThanOrderByStartDesc(final Long bookerId, final LocalDateTime end);
 
-    List<Booking> findAllByBookerIdAndStartIsGreaterThanOrderByStartDesc(Long bookerId, LocalDateTime start);
+    List<Booking> findAllByBookerIdAndStartIsGreaterThanOrderByStartDesc(final Long bookerId,
+                                                                         final LocalDateTime start);
 
     // -------------- The user requests a list of rents that he makes --------------
 
-    List<Booking> findAllByItemOwnerIdOrderByStartDesc(Long itemOwnerId);
+    List<Booking> findAllByItemOwnerIdOrderByStartDesc(final Long itemOwnerId);
 
-    List<Booking> findAllByItemOwnerIdAndBookingStatusOrderByStartDesc(Long itemOwnerId, Status status);
+    List<Booking> findAllByItemOwnerIdAndBookingStatusOrderByStartDesc(final Long itemOwnerId, final Status status);
 
-    List<Booking> findAllByItemOwnerIdAndStartIsGreaterThanOrderByStartDesc(Long itemOwnerId, LocalDateTime start);
+    List<Booking> findAllByItemOwnerIdAndStartIsGreaterThanOrderByStartDesc(final Long itemOwnerId,
+                                                                            final LocalDateTime start);
 
-    List<Booking> findAllByItemOwnerIdAndEndIsLessThanOrderByStartDesc(long userId, LocalDateTime now);
+    List<Booking> findAllByItemOwnerIdAndEndIsLessThanOrderByStartDesc(final long userId, final LocalDateTime now);
 
-    List<Booking> findAllByItemOwnerIdAndStartIsLessThanAndEndIsGreaterThanOrderByStartDesc(Long itemOwnerId,
-                                                                                            LocalDateTime start,
-                                                                                            LocalDateTime end);
-
-
-    Optional<Booking> findTop1BookingByItem_IdAndStartBeforeAndBookingStatusOrderByEndDesc(Long itemId, LocalDateTime end,
-                                                                                           Status status);
-
-    Optional<Booking> findTop1BookingByItem_IdAndStartAfterAndBookingStatusOrderByEndAsc(Long itemId, LocalDateTime now,
-                                                                                         Status status);
+    List<Booking> findAllByItemOwnerIdAndStartIsLessThanAndEndIsGreaterThanOrderByStartDesc(final Long itemOwnerId,
+                                                                                            final LocalDateTime start,
+                                                                                            final LocalDateTime end);
 
 
-    @Query(value = """
-            select bk.*
-            from bookings as bk
-            where bk.item_id = :itemId
-            and bk.booker_id = :bookerId
-            and bk.status = :status
-            and bk.start_date < :date
-            """, nativeQuery = true)
-    Optional<Booking> findByBookerIdAndItemIdAndBookingStatusAndStartIsLessThan(@Param("bookerId") final long bookerId,
-                                                                                @Param("itemId") final long itemId,
-                                                                                @Param("status") final Status bookingStatus,
-                                                                                @Param("date") final LocalDateTime now);
+    Optional<Booking> findTop1BookingByItem_IdAndStartBeforeAndBookingStatusOrderByEndDesc(final Long itemId,
+                                                                                           final LocalDateTime end,
+                                                                                           final Status status);
 
-    Optional<Booking> findTop1BookingByItemIdAndBookerIdAndEndBeforeAndBookingStatusOrderByEndDesc(Long itemId, Long bookerId,
-                                                                                                   LocalDateTime now,
-                                                                                                   Status status);
+    Optional<Booking> findTop1BookingByItem_IdAndStartAfterAndBookingStatusOrderByEndAsc(final Long itemId,
+                                                                                         final LocalDateTime now,
+                                                                                         final Status status);
 
     /**
      * Поиск бронирования по id пользователя и вещи
@@ -86,11 +72,13 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             where b.item_id = :itemId
             and b.booker_id = :bookerId  
             and b.start_date < :now  
+            and b.status = :status
             order by b.start_date desc  
             limit 1
             """, nativeQuery = true)
-    Booking searchForBookerIdAndItemId(@Param("bookerId") final Long bookerId,
-                                       @Param("itemId") final Long itemId,
-                                       @Param("now") final LocalDateTime now);
+    Optional<Booking> searchForBookerIdAndItemId(@Param("bookerId") final Long bookerId,
+                                                 @Param("itemId") final Long itemId,
+                                                 @Param("now") final LocalDateTime now,
+                                                 @Param("status") final String status);
 
 }

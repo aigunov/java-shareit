@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dao.BookingRepository;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
-import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.Status;
 import ru.practicum.shareit.exception.ItemNotAvailable;
 import ru.practicum.shareit.item.dao.CommentRepository;
@@ -42,6 +41,7 @@ public class ItemServiceImpl implements ItemService {
      * @param itemDto - тело запроса
      * @return Item сохраненный в базе данных
      */
+    @Transactional
     @Override
     public ItemResponse createItem(final ItemCreate itemDto) {
         User owner = userRepository.findById(itemDto.getOwnerId())
@@ -60,6 +60,7 @@ public class ItemServiceImpl implements ItemService {
      * @param itemDto - тело запроса
      * @return item обновленный в базе
      */
+    @Transactional
     @Override
     public ItemResponse updateItem(final ItemUpdate itemDto) {
         userRepository.findById(itemDto.getOwnerId())
@@ -94,16 +95,20 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ItemResponse getOwnerItemById(long itemId, Long userId) {
         LocalDateTime now = LocalDateTime.now();
         ItemResponse item = ItemMapper.toItemDto(itemRepository.findById(itemId)
                 .orElseThrow(() -> new NoSuchElementException("Такого пользователя не существует")));
         ItemResponse.BookingInfo nextBooking = BookingMapper
-                .toBookingInfo(bookingRepository.findTop1BookingByItem_IdAndStartAfterAndBookingStatusOrderByEndAsc(userId, now, Status.APPROVED));
+                .toBookingInfo(bookingRepository
+                        .findTop1BookingByItem_IdAndStartAfterAndBookingStatusOrderByEndAsc(userId, now, Status.APPROVED));
         ItemResponse.BookingInfo previousBooking = BookingMapper
-                .toBookingInfo(bookingRepository.findTop1BookingByItem_IdAndStartBeforeAndBookingStatusOrderByEndDesc(userId, now, Status.APPROVED));
+                .toBookingInfo(bookingRepository
+                        .findTop1BookingByItem_IdAndStartBeforeAndBookingStatusOrderByEndDesc(userId, now, Status.APPROVED));
         List<CommentResponse> comments = commentRepository.getCommentsByItemId(itemId).stream()
                 .map(CommentMapper::toCommentResponse).toList();
+
         item.setComments(comments);
         item.setNextBooking(nextBooking);
         item.setLastBooking(previousBooking);
@@ -152,6 +157,7 @@ public class ItemServiceImpl implements ItemService {
      * @param text - request parameter с текстом по которому нужно производить поиск
      * @return список всех подходящих item
      */
+    @Transactional(readOnly = true)
     @Override
     public List<ItemResponse> search(final String text) {
         List<ItemResponse> items = itemRepository
@@ -169,16 +175,15 @@ public class ItemServiceImpl implements ItemService {
      * @param commentCreate
      * @return
      */
+    @Transactional
     @Override
     public CommentResponse postComment(long userId, long itemId, CommentCreate commentCreate) {
         User user = userRepository.findById(commentCreate.getAuthorId())
                 .orElseThrow(() -> new NoSuchElementException("User author doesn't exist"));
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new NoSuchElementException("Item item doesn't exist"));
-        Booking booking = bookingRepository.searchForBookerIdAndItemId(userId, itemId, LocalDateTime.now());
-        if (booking == null || !booking.getBookingStatus().equals(Status.APPROVED)) {
-            throw new ItemNotAvailable(String.format("User {%s} never made reservation on Item {%s}", user, item));
-        }
+        bookingRepository.searchForBookerIdAndItemId(userId, itemId, LocalDateTime.now(), String.valueOf(Status.APPROVED))
+                .orElseThrow(() -> new ItemNotAvailable(String.format("User {%s} never made reservation on Item {%s}", user, item)));
         Comment comment = commentRepository.save(CommentMapper.toComment(commentCreate, user, item));
         log.info("Comment: {}", comment);
         return CommentMapper.toCommentResponse(comment);

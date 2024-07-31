@@ -31,6 +31,7 @@ public final class BookingMapper {
     /**
      * Booking --> BookingResponse
      */
+    @NonNull
     public static BookingResponse toBookingResponse(Booking booking) {
         return BookingResponse.builder()
                 .id(booking.getId())

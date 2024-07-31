@@ -1,20 +1,20 @@
 package ru.practicum.shareit.item.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import ru.practicum.shareit.user.model.User;
 
 /**
  * @author Mr.White
  * POJO класс Item
  */
-@Data
 @Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
+@Setter
+@Getter
+@ToString
+@EqualsAndHashCode(of = {"id"})
 @Entity()
 @Table(name = "items")
 public class Item {
@@ -32,6 +32,7 @@ public class Item {
     @Column(name = "is_available", nullable = false)
     private Boolean available;
 
+    @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
     private User owner;

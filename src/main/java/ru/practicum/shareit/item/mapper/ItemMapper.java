@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item.mapper;
 
-import ru.practicum.shareit.item.dto.ItemBookingInfo;
+import io.micrometer.common.lang.NonNull;
+import ru.practicum.shareit.booking.dto.BookingResponse;
 import ru.practicum.shareit.item.dto.ItemCreate;
 import ru.practicum.shareit.item.dto.ItemResponse;
 import ru.practicum.shareit.item.dto.ItemUpdate;
@@ -10,6 +11,7 @@ public class ItemMapper {
     /**
      * Item -> ItemResponse
      */
+    @NonNull
     public static ItemResponse toItemDto(final Item item) {
         return ItemResponse.builder()
                 .id(item.getId())
@@ -22,6 +24,7 @@ public class ItemMapper {
     /**
      * ItemCreate -> Item
      */
+    @NonNull
     public static Item toItem(final ItemCreate itemDto) {
         return Item.builder()
                 .name(itemDto.getName())
@@ -33,6 +36,7 @@ public class ItemMapper {
     /**
      * Item <- ItemUpdateDto
      */
+    @NonNull
     public static Item updateItemFromUpdateDto(final Item item, final ItemUpdate itemDto) {
         item.setName(itemDto.getName() != null && !itemDto.getName().isEmpty() ? itemDto.getName() : item.getName());
         item.setDescription(itemDto.getDescription() != null && !itemDto.getDescription().isEmpty() ?
@@ -44,8 +48,9 @@ public class ItemMapper {
     /**
      * Item -> ItemBookingInfo
      */
-    public static ItemBookingInfo toItemBookingInfo(final Item item) {
-        return ItemBookingInfo.builder()
+    @NonNull
+    public static BookingResponse.ItemBookingInfo toItemBookingInfo(final Item item) {
+        return BookingResponse.ItemBookingInfo.builder()
                 .id(item.getId())
                 .name(item.getName())
                 .build();

@@ -1,18 +1,19 @@
 package ru.practicum.shareit.booking.dto;
 
-import jakarta.validation.constraints.AssertTrue;
-import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.FutureOrPresent;
-import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
-import lombok.Data;
+import jakarta.validation.constraints.*;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Data
-@Builder
+@Builder(toBuilder = true)
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class BookingCreate {
 
+    @NotNull
+    @Min(1)
     private Long itemId;
 
     private Long bookerId;

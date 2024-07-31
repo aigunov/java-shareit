@@ -32,6 +32,7 @@ public class BookingServiceImpl implements BookingService {
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
 
+    @Transactional
     @Override
     public BookingResponse addBooking(BookingCreate bookingDto) {
         User booker = userRepository.findById(bookingDto.getBookerId())
@@ -90,7 +91,7 @@ public class BookingServiceImpl implements BookingService {
     @Transactional(readOnly = true)
     @Override
     public List<BookingResponse> findUserBookingByCondition(long userId, Condition state) {
-        User user = userRepository.findById(userId)
+        userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("User with id " + userId + " not found"));
         List<BookingResponse> bookingResponseList = switch (state) {
             case ALL -> bookingRepository.findAllBookingByBookerId(userId)
@@ -121,7 +122,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<BookingResponse> findOwnerBookingByCondition(long userId, Condition condition) {
-        User user = userRepository.findById(userId)
+        userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("User with id " + userId + " not found"));
         List<BookingResponse> bookingResponseList = switch (condition) {
             case ALL -> bookingRepository.findAllByItemOwnerIdOrderByStartDesc(userId)

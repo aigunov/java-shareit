@@ -1,7 +1,6 @@
 package ru.practicum.shareit.item.dto;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 /**
  * @author Mr.White
@@ -11,7 +10,12 @@ import lombok.Data;
  * необходимо создать разные DTO для item
  */
 @Builder(toBuilder = true)
-@Data
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode(of = {"id"})
+@ToString
 public class ItemUpdate {
     private long id;
     private long ownerId;
