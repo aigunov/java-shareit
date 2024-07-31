@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item.mapper;
 
+import io.micrometer.common.lang.NonNull;
 import ru.practicum.shareit.item.dto.CommentCreate;
 import ru.practicum.shareit.item.dto.CommentResponse;
 import ru.practicum.shareit.item.model.Comment;
@@ -12,6 +13,7 @@ public class CommentMapper {
     /**
      * CommentCreate -> Comment
      */
+    @NonNull
     public static Comment toComment(CommentCreate commentCreate, User author, Item item) {
         return Comment.builder()
                 .text(commentCreate.getText())
@@ -25,6 +27,7 @@ public class CommentMapper {
     /**
      * Comment -> CommentResponse
      */
+    @NonNull
     public static CommentResponse toCommentResponse(Comment comment) {
         return CommentResponse.builder()
                 .id(comment.getId())

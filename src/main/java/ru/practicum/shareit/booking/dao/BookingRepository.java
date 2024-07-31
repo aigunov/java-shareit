@@ -16,7 +16,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     // -------------- the user requests a list of his rentals --------------
     @Query(value = """
-            select bk.*        
+            select bk.*
             from bookings as bk
             where bk.booker_id = :booker_id
             order by bk.start_date desc
@@ -67,13 +67,13 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
      * @return последнее бронирование пользователя для заданной точки
      */
     @Query(value = """
-            select * 
-            from bookings as b  
+            select *
+            from bookings as b
             where b.item_id = :itemId
-            and b.booker_id = :bookerId  
-            and b.start_date < :now  
+            and b.booker_id = :bookerId
+            and b.start_date < :now
             and b.status = :status
-            order by b.start_date desc  
+            order by b.start_date desc
             limit 1
             """, nativeQuery = true)
     Optional<Booking> searchForBookerIdAndItemId(@Param("bookerId") final Long bookerId,
