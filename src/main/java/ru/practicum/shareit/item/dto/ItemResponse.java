@@ -1,7 +1,7 @@
 package ru.practicum.shareit.item.dto;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -16,20 +16,20 @@ import java.util.List;
 @EqualsAndHashCode(of = {"id"})
 public class ItemResponse {
 
-    List<CommentResponse> comments;
+    private List<CommentResponse> comments;
 
     @Valid
-    BookingInfo nextBooking;
+    private BookingInfo nextBooking;
 
     @Valid
-    BookingInfo lastBooking;
+    private BookingInfo lastBooking;
 
     private long id;
 
-    @NotEmpty
+    @NotBlank
     private String name;
 
-    @NotEmpty
+    @NotBlank
     private String description;
 
     @NotNull

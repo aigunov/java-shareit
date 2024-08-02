@@ -46,8 +46,7 @@ public class ItemServiceImpl implements ItemService {
     public ItemResponse createItem(final ItemCreate itemDto) {
         User owner = userRepository.findById(itemDto.getOwnerId())
                 .orElseThrow(() -> new NoSuchElementException("Такого пользователя не существует"));
-        Item item = ItemMapper.toItem(itemDto);
-        item.setOwner(owner);
+        Item item = ItemMapper.toItem(itemDto, owner);
         ItemResponse itemResponse = ItemMapper.toItemDto(itemRepository.save(item));
         log.info("Item created: {}", item);
         return itemResponse;
@@ -98,8 +97,6 @@ public class ItemServiceImpl implements ItemService {
     @Transactional(readOnly = true)
     public ItemResponse getOwnerItemById(long itemId, Long userId) {
         LocalDateTime now = LocalDateTime.now();
-        ItemResponse item = ItemMapper.toItemDto(itemRepository.findById(itemId)
-                .orElseThrow(() -> new NoSuchElementException("Такого пользователя не существует")));
         ItemResponse.BookingInfo nextBooking = BookingMapper
                 .toBookingInfo(bookingRepository
                         .findTop1BookingByItem_IdAndStartAfterAndBookingStatusOrderByEndAsc(userId, now, Status.APPROVED));
@@ -108,10 +105,9 @@ public class ItemServiceImpl implements ItemService {
                         .findTop1BookingByItem_IdAndStartBeforeAndBookingStatusOrderByEndDesc(userId, now, Status.APPROVED));
         List<CommentResponse> comments = commentRepository.getCommentsByItemId(itemId).stream()
                 .map(CommentMapper::toCommentResponse).toList();
-
-        item.setComments(comments);
-        item.setNextBooking(nextBooking);
-        item.setLastBooking(previousBooking);
+        ItemResponse item = ItemMapper.toItemDto(itemRepository.findById(itemId)
+                        .orElseThrow(() -> new NoSuchElementException("Такого пользователя не существует")),
+                comments, nextBooking, previousBooking);
         log.info("Item owner received: {}", item);
         return item;
     }

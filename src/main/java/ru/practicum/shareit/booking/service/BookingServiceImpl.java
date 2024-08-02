@@ -62,8 +62,9 @@ public class BookingServiceImpl implements BookingService {
         if (!owner.equals(item.getOwner()))
             throw new NoSuchElementException("User: " + owner + " is not owner of booking " + booking);
         Status status = approved ? Status.APPROVED : Status.REJECTED;
-        if (booking.getBookingStatus().equals(status))
+        if (booking.getBookingStatus().equals(status)) {
             throw new ChangeBookingStatusTwice("You cannot change state double");
+        }
 
         if (approved) {
             booking.setBookingStatus(Status.APPROVED);
@@ -84,8 +85,10 @@ public class BookingServiceImpl implements BookingService {
                 .orElseThrow(() -> new NoSuchElementException("Booking with id " + bookingId + " not found"));
         User booker = booking.getBooker();
         User owner = booking.getItem().getOwner();
-        if (booker.equals(watcher) || owner.equals(watcher)) return BookingMapper.toBookingResponse(booking);
-        else throw new NoSuchElementException("User: " + owner + " is not owner and not booker of booking " + booking);
+        if (booker.equals(watcher) || owner.equals(watcher)) {
+            return BookingMapper.toBookingResponse(booking);
+        } else
+            throw new NoSuchElementException("User: " + owner + " is not owner and not booker of booking " + booking);
     }
 
     @Transactional(readOnly = true)

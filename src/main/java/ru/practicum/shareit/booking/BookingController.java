@@ -53,28 +53,19 @@ public final class BookingController {
     public List<BookingResponse> getBookingsByCondition(@RequestHeader(value = "X-Sharer-User-Id") final long userId,
                                                         @RequestParam(defaultValue = "ALL") final String state) {
         log.info("User {} requests a list of his rentals by {}", userId, state);
-        try {
-            Condition condition = Condition.valueOf(state.toUpperCase());
-            List<BookingResponse> bookingResponseList = bookingService.findUserBookingByCondition(userId, condition);
-            log.info("Bookings found: {}", bookingResponseList);
-            return bookingResponseList;
-        } catch (IllegalArgumentException exception) {
-            throw new IllegalArgumentException("Unknown condition: " + state);
-        }
-
+        Condition condition = Condition.valueOf(state.toUpperCase());
+        List<BookingResponse> bookingResponseList = bookingService.findUserBookingByCondition(userId, condition);
+        log.info("Bookings found: {}", bookingResponseList);
+        return bookingResponseList;
     }
 
     @GetMapping("/owner")
     public List<BookingResponse> getOwnerBookingsByCondition(@RequestHeader(value = "X-Sharer-User-Id") final long userId,
                                                              @RequestParam(defaultValue = "ALL") final String state) {
-        try {
-            Condition condition = Condition.valueOf(state.toUpperCase());
-            List<BookingResponse> bookingResponseList = bookingService.findOwnerBookingByCondition(userId, condition);
-            log.info("Bookings found {}", bookingResponseList);
-            return bookingResponseList;
-        } catch (IllegalArgumentException exception) {
-            throw new IllegalArgumentException("Unknown condition: " + state);
-        }
+        Condition condition = Condition.valueOf(state.toUpperCase());
+        List<BookingResponse> bookingResponseList = bookingService.findOwnerBookingByCondition(userId, condition);
+        log.info("Bookings found {}", bookingResponseList);
+        return bookingResponseList;
     }
 
 
