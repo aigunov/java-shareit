@@ -3,7 +3,7 @@ package ru.practicum.shareit.user.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.user.dao.UserDAO;
+import ru.practicum.shareit.user.dao.UserRepository;
 import ru.practicum.shareit.user.dto.UserCreate;
 import ru.practicum.shareit.user.dto.UserResponse;
 import ru.practicum.shareit.user.dto.UserUpdate;
@@ -21,7 +21,7 @@ import java.util.NoSuchElementException;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final UserDAO userDAO;
+    private final UserRepository repository;
 
     /**
      * Метод добавляет пользователя
@@ -31,7 +31,8 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserResponse addUser(final UserCreate userCreate) {
-        User user = userDAO.saveUser(UserMapper.toUser(userCreate));
+        log.info("Adding user: {}", userCreate);
+        User user = repository.save(UserMapper.toUser(userCreate));
         log.info("User {} added", userCreate.getEmail());
         return UserMapper.toUserResponse(user);
     }
@@ -43,7 +44,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserResponse getUser(final Long userId) {
-        UserResponse user = UserMapper.toUserResponse(userDAO.getUser(userId)
+        UserResponse user = UserMapper.toUserResponse(repository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("Данный пользователь не найден")));
         log.info("User {} found", user);
         return user;
@@ -54,7 +55,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public List<UserResponse> getAllUsers() {
-        List<UserResponse> users = userDAO.getAllUsers().stream().map(UserMapper::toUserResponse).toList();
+        List<UserResponse> users = repository.findAll().stream().map(UserMapper::toUserResponse).toList();
         log.info("Users {}", users);
         return users;
     }
@@ -66,7 +67,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void deleteUser(final Long userId) {
-        userDAO.deleteUser(userId);
+        repository.deleteById(userId);
         log.info("User #{} deleted", userId);
     }
 
@@ -76,22 +77,17 @@ public class UserServiceImpl implements UserService {
      * в противно случае выбрасывает соответсвуеющее исключение
      *
      * @param userUpdate - тело запроса содержащее поля для обновления
-     * @param userId     - ID пользователя которого надо обновить
      * @return обновленного пользователя
      */
     @Override
-    public UserResponse updateUser(final UserUpdate userUpdate, final Long userId) {
-        User oldUserData = userDAO.getUser(userId)
+    public UserResponse updateUser(final UserUpdate userUpdate) {
+        User user = repository.findById(userUpdate.getId())
                 .orElseThrow(() -> new NoSuchElementException("Данный пользователь не найден"));
 
+        UserMapper.updateUserFromDto(user, userUpdate);
 
-        User newUserData = UserMapper.toUser(userUpdate, userId);
-        newUserData.setEmail(userUpdate.getEmail() != null ? userUpdate.getEmail() : oldUserData.getEmail());
-        newUserData.setName(userUpdate.getName() != null ? userUpdate.getName() : oldUserData.getName());
-
-
-        UserResponse user = UserMapper.toUserResponse(userDAO.updateUser(newUserData));
+        repository.save(user);
         log.info("User {} updated", user);
-        return user;
+        return UserMapper.toUserResponse(user);
     }
 }

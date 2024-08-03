@@ -37,4 +37,15 @@ public final class UserMapper {
                 .email(userUpdate.getEmail())
                 .build();
     }
+
+    /**
+     * User <- UserUpdate
+     */
+    public static User updateUserFromDto(final User user, final UserUpdate userUpdate) {
+        user.setName(userUpdate.getName() != null && !userUpdate.getName().isEmpty() ?
+                userUpdate.getName() : user.getName());
+        user.setEmail(userUpdate.getEmail() != null && !userUpdate.getEmail().isEmpty() ?
+                userUpdate.getEmail() : user.getEmail());
+        return user;
+    }
 }

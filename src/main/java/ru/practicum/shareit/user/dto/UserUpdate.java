@@ -13,6 +13,7 @@ import lombok.Data;
 @Data
 @Builder
 public class UserUpdate {
+    private long id;
     private String name;
     private String email;
 }
