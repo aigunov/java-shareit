@@ -1,0 +1,55 @@
+{
+  "uuid": "124937b2-df71-485f-adda-b9c4a9bace09",
+  "historyId": "ceb46d6ba7051f7b221968b23135fc86",
+  "testCaseId": "[engine:junit-jupiter]/[class:ru.practicum.shareit.item.ItemDtoJsonTest]/[method:commentCreate()]",
+  "testCaseName": "commentCreate()",
+  "fullName": "ru.practicum.shareit.item.ItemDtoJsonTest.commentCreate",
+  "labels": [
+    {
+      "name": "junit.platform.uniqueid",
+      "value": "[engine:junit-jupiter]/[class:ru.practicum.shareit.item.ItemDtoJsonTest]/[method:commentCreate()]"
+    },
+    {
+      "name": "host",
+      "value": "DESKTOP-11DRD8U"
+    },
+    {
+      "name": "thread",
+      "value": "22196@DESKTOP-11DRD8U.main(1)"
+    },
+    {
+      "name": "framework",
+      "value": "junit-platform"
+    },
+    {
+      "name": "language",
+      "value": "java"
+    },
+    {
+      "name": "package",
+      "value": "ru.practicum.shareit.item.ItemDtoJsonTest"
+    },
+    {
+      "name": "testClass",
+      "value": "ru.practicum.shareit.item.ItemDtoJsonTest"
+    },
+    {
+      "name": "testMethod",
+      "value": "commentCreate"
+    },
+    {
+      "name": "suite",
+      "value": "ru.practicum.shareit.item.ItemDtoJsonTest"
+    }
+  ],
+  "links": [],
+  "name": "commentCreate()",
+  "status": "passed",
+  "stage": "finished",
+  "description": "",
+  "steps": [],
+  "attachments": [],
+  "parameters": [],
+  "start": 1723706079214,
+  "stop": 1723706079224
+}

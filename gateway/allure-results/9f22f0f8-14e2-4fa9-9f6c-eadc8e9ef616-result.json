@@ -1,0 +1,55 @@
+{
+  "uuid": "9f22f0f8-14e2-4fa9-9f6c-eadc8e9ef616",
+  "historyId": "b2d6f58ff572857ce554932015d9c39b",
+  "testCaseId": "[engine:junit-jupiter]/[class:ru.practicum.shareit.item.ItemDtoJsonTest]/[method:itemUpdateTest()]",
+  "testCaseName": "itemUpdateTest()",
+  "fullName": "ru.practicum.shareit.item.ItemDtoJsonTest.itemUpdateTest",
+  "labels": [
+    {
+      "name": "junit.platform.uniqueid",
+      "value": "[engine:junit-jupiter]/[class:ru.practicum.shareit.item.ItemDtoJsonTest]/[method:itemUpdateTest()]"
+    },
+    {
+      "name": "host",
+      "value": "DESKTOP-11DRD8U"
+    },
+    {
+      "name": "thread",
+      "value": "22196@DESKTOP-11DRD8U.main(1)"
+    },
+    {
+      "name": "framework",
+      "value": "junit-platform"
+    },
+    {
+      "name": "language",
+      "value": "java"
+    },
+    {
+      "name": "package",
+      "value": "ru.practicum.shareit.item.ItemDtoJsonTest"
+    },
+    {
+      "name": "testClass",
+      "value": "ru.practicum.shareit.item.ItemDtoJsonTest"
+    },
+    {
+      "name": "testMethod",
+      "value": "itemUpdateTest"
+    },
+    {
+      "name": "suite",
+      "value": "ru.practicum.shareit.item.ItemDtoJsonTest"
+    }
+  ],
+  "links": [],
+  "name": "itemUpdateTest()",
+  "status": "passed",
+  "stage": "finished",
+  "description": "",
+  "steps": [],
+  "attachments": [],
+  "parameters": [],
+  "start": 1723706079185,
+  "stop": 1723706079203
+}
