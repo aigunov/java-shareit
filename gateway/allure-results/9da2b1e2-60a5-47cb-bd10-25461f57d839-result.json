@@ -1,0 +1,55 @@
+{
+  "uuid": "9da2b1e2-60a5-47cb-bd10-25461f57d839",
+  "historyId": "51886013d19ef9bfe049ad4d60e6eb48",
+  "testCaseId": "[engine:junit-jupiter]/[class:ru.practicum.shareit.user.UserDtoJsonTest]/[method:userUpdateTest()]",
+  "testCaseName": "userUpdateTest()",
+  "fullName": "ru.practicum.shareit.user.UserDtoJsonTest.userUpdateTest",
+  "labels": [
+    {
+      "name": "junit.platform.uniqueid",
+      "value": "[engine:junit-jupiter]/[class:ru.practicum.shareit.user.UserDtoJsonTest]/[method:userUpdateTest()]"
+    },
+    {
+      "name": "host",
+      "value": "DESKTOP-11DRD8U"
+    },
+    {
+      "name": "thread",
+      "value": "22196@DESKTOP-11DRD8U.main(1)"
+    },
+    {
+      "name": "framework",
+      "value": "junit-platform"
+    },
+    {
+      "name": "language",
+      "value": "java"
+    },
+    {
+      "name": "package",
+      "value": "ru.practicum.shareit.user.UserDtoJsonTest"
+    },
+    {
+      "name": "testClass",
+      "value": "ru.practicum.shareit.user.UserDtoJsonTest"
+    },
+    {
+      "name": "testMethod",
+      "value": "userUpdateTest"
+    },
+    {
+      "name": "suite",
+      "value": "ru.practicum.shareit.user.UserDtoJsonTest"
+    }
+  ],
+  "links": [],
+  "name": "userUpdateTest()",
+  "status": "passed",
+  "stage": "finished",
+  "description": "",
+  "steps": [],
+  "attachments": [],
+  "parameters": [],
+  "start": 1723706079366,
+  "stop": 1723706079375
+}

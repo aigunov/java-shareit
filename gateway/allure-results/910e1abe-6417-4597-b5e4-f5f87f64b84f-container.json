@@ -1,0 +1,11 @@
+{
+  "uuid": "910e1abe-6417-4597-b5e4-f5f87f64b84f",
+  "name": "BookingDtoJsonTest",
+  "children": [
+    "3acb18c8-8208-4238-ac78-5b805439817e"
+  ],
+  "befores": [],
+  "afters": [],
+  "start": 1723706071665,
+  "stop": 1723706079098
+}
