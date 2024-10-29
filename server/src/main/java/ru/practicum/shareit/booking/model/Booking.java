@@ -32,6 +32,7 @@ public class Booking {
     @JoinColumn(name = "item_id")
     private Item item;
 
+
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "booker_id")

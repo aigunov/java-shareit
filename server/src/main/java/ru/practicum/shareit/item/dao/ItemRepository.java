@@ -7,7 +7,6 @@ import ru.practicum.shareit.item.model.Item;
 
 import java.util.List;
 import java.util.Optional;
-
 /**
  * @author Mr.White
  * Интерфейс взаимодействия с хранилищами
